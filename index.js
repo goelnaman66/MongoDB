@@ -1,6 +1,7 @@
 const Mongoose = require('mongoose');
 const User = require('./user')
 const UserQuery = require('./userModelImpl');
+const Blog = require('./blog');
 
 const connect = () =>{
    return Mongoose.connect('mongodb://localhost:27017/MongoDemo');
@@ -13,7 +14,7 @@ connect()
 
     // Just For Demo
     await User.deleteMany({});
-    // await Blog.deleteMany({});
+    await Blog.deleteMany({});
     //
 
     const user = await User.create({
@@ -44,6 +45,17 @@ connect()
     console.log(u1);
     console.log(u2);
     console.log(u3);
+    console.log("*********************************");
 
+    const b1 = await Blog.create({
+        title: 'New Blog 10',
+        description: 'This is my latest blog please check it out !!!',
+        author: user.id
+    });
+
+    console.log(b1);
+
+    const b2 = await Blog.findById(b1.id).populate('author').exec();
+    console.log(b2);
 })
 .catch(err=>console.log(err));
